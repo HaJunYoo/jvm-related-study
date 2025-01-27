@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['.']
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
+}
+
+
+tasks.register('runPackageMain1', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'pack.PackageMain1'
+}
+
+tasks.register('runPackageMain2', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'pack.PackageMain2'
+}
+
+tasks.register('runPackageMain3', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'pack.PackageMain3'
+}
+
+tasks.register('runPackageMain4', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'pack.PackageMain4'
+}
+
+// 실행:
+// ./gradlew :pack:runPackageMain1
+// ./gradlew :pack:runPackageMain2
+// ./gradlew :pack:runPackageMain3

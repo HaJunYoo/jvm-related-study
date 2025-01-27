@@ -1,0 +1,4 @@
+rootProject.name = 'Java-basic'
+include ':pack', ':com'
+project(':pack').projectDir = file('src/main/java/pack')
+project(':com').projectDir = file('src/main/java/com')

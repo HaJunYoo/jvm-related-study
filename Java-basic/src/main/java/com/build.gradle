@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['.']
+        }
+    }
+}
+
+dependencies {
+    // 유틸리티 라이브러리
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // 로깅
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
+}
+
+// helloshop 서비스들을 위한 실행 태스크
+tasks.register('ComMain', JavaExec) {
+    group = 'application'
+    description = 'Runs the ComMain'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.helloshop.ComMain'  // com 디렉토리부터 시작하므로 com 제외
+}
+
+// 인코딩 설정
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
