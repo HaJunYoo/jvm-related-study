@@ -35,19 +35,19 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: "jdbc:mysql://localhost/library"
+    url: "jdbc:mysql://db/library"
     username: "root"
     password: "Abcd1234!"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-
+# http://localhost:8080/swagger-ui/index.html#/
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

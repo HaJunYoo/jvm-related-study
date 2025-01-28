@@ -3,6 +3,7 @@ package com.group.libraryapp.domain.user;
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -12,13 +13,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
+  @Getter
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id = null;
 
+  @Getter
   @Column(nullable = false, length = 20)
   private String name;
 
+  @Getter
   private Integer age;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -26,33 +30,19 @@ public class User {
 
   // 기존 orm 생성자
   public User(String name, Integer age) {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다", name));
-    }
+    checkUserNameNull(name);
+
     this.name = name;
     this.age = age;
   }
 
   // JdbcTemplate용 생성자 추가
   public User(String name, Integer age, Long id) {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다", name));
-    }
+    checkUserNameNull(name);
+
     this.name = name;
     this.age = age;
     this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public Integer getAge() {
-    return age;
-  }
-
-  public Long getId() {
-    return id;
   }
 
   public void updateName(String name) {
@@ -69,6 +59,12 @@ public class User {
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
     targetHistory.doReturn();
+  }
+
+  private void checkUserNameNull(String name) {
+    if (name == null || name.isBlank()) {
+      throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다", name));
+    }
   }
 
 }
