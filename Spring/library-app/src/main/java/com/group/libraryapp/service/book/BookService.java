@@ -3,23 +3,33 @@ package com.group.libraryapp.service.book;
 import com.group.libraryapp.domain.book.Book;
 import com.group.libraryapp.domain.book.BookRepository;
 import com.group.libraryapp.domain.user.User;
-import com.group.libraryapp.domain.user.UserRepository;
-import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
+import com.group.libraryapp.repository.user.UserRepository;
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistoryRepository;
 import com.group.libraryapp.dto.book.request.BookCreateRequest;
 import com.group.libraryapp.dto.book.request.BookLoanRequest;
 import com.group.libraryapp.dto.book.request.BookReturnRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class BookService {
 
   private final BookRepository bookRepository;
   private final UserLoanHistoryRepository userLoanHistoryRepository;
   private final UserRepository userRepository;
+
+  public BookService(
+          BookRepository bookRepository,
+          UserLoanHistoryRepository userLoanHistoryRepository,
+          @Qualifier("userJdbcRepository") UserRepository userRepository
+  ) {
+    this.bookRepository = bookRepository;
+    this.userLoanHistoryRepository = userLoanHistoryRepository;
+    this.userRepository = userRepository;
+  }
 
   @Transactional
   public void saveBook(BookCreateRequest request) {

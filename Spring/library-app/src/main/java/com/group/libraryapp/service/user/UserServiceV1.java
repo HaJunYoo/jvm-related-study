@@ -3,7 +3,7 @@ package com.group.libraryapp.service.user;
 import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
-import com.group.libraryapp.repository.user.UserJdbcRepository;
+import com.group.libraryapp.repository.user.UserJdbcRepositoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 //@Service
 //public class UserServiceV1 {
 //
-//  private final UserJdbcRepository userJdbcRepository;
+//  private final UserJdbcRepository UserJdbcRepositoryImpl;
 //
 //  public UserServiceV1(UserJdbcRepository userJdbcRepository) {
 //    this.userJdbcRepository = userJdbcRepository;

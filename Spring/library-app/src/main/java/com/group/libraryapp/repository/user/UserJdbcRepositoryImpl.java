@@ -1,7 +1,7 @@
 package com.group.libraryapp.repository.user;
 
 import com.group.libraryapp.domain.user.User;
-import com.group.libraryapp.dto.user.response.UserResponse;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Repository
-public class UserJdbcRepository {
+@Repository("userJdbcRepository")
+@Primary
+public class UserJdbcRepositoryImpl implements UserRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -23,7 +24,7 @@ public class UserJdbcRepository {
     return new User(name, age, id);
   };
 
-  public UserJdbcRepository(JdbcTemplate jdbcTemplate) {
+  public UserJdbcRepositoryImpl(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
