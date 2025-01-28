@@ -5,6 +5,7 @@ import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
 import com.group.libraryapp.repository.user.UserJdbcRepositoryImpl;
 import com.group.libraryapp.repository.user.UserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public class UserServiceV1 {
 
   private final UserRepository userRepository;
 
-  public UserServiceV1(UserRepository userRepository) {
-      this.userRepository = userRepository;
-  }
+    public UserServiceV1(@Qualifier("userJdbcRepository") UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 //  public void saveUser(UserCreateRequest request) {
 //      userRepository.saveUser(request.getName(), request.getAge());
