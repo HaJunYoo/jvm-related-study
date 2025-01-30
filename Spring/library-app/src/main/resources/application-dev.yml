@@ -2,6 +2,11 @@ spring:
   config:
     activate:
       on-profile: dev
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
   datasource:
     url: "jdbc:mysql://db/library"
     username: "root"
@@ -9,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true

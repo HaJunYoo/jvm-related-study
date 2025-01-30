@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,14 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserLoanHistory> userLoanHistories = new ArrayList<>();
+
+  public List<UserLoanHistory> getUserLoanHistories() {
+    return this.userLoanHistories;
+  }
+
+  public int getLoanHistorySize() {
+    return this.userLoanHistories.size();
+  }
 
   // 기존 orm 생성자
   public User(String name, Integer age) {
@@ -50,7 +59,8 @@ public class User {
   }
 
   public void loanBook(String bookName) {
-    this.userLoanHistories.add(new UserLoanHistory(this, bookName));
+    UserLoanHistory history = new UserLoanHistory(this, bookName);
+    this.userLoanHistories.add(history);
   }
 
   public void returnBook(String bookName) {

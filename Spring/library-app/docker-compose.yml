@@ -1,15 +1,20 @@
 version: '3.8'
-
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfile.dev
     ports:
       - "8080:8080"
     environment:
+      JAVA_OPTS: "-Dspring.devtools.restart.enabled=true -Dfile.encoding=UTF-8"
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://db/library
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Abcd1234!
+    volumes:
+      - .:/app
+      - gradle-cache:/root/.gradle
     depends_on:
       db:
         condition: service_healthy
@@ -24,10 +29,11 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    healthcheck: # 추가
+    healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 20s
       retries: 10
 
 volumes:
   mysql_data:
+  gradle-cache:

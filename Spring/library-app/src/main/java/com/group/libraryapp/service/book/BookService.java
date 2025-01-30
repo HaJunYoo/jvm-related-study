@@ -1,6 +1,7 @@
 package com.group.libraryapp.service.book;
 
 import com.group.libraryapp.domain.book.Book;
+import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
 import com.group.libraryapp.repository.book.BookRepository;
 import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.repository.user.UserRepository;
@@ -8,10 +9,12 @@ import com.group.libraryapp.repository.user.loanhistory.UserLoanHistoryRepositor
 import com.group.libraryapp.dto.book.request.BookCreateRequest;
 import com.group.libraryapp.dto.book.request.BookLoanRequest;
 import com.group.libraryapp.dto.book.request.BookReturnRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 //@RequiredArgsConstructor
 public class BookService {
@@ -37,20 +40,37 @@ public class BookService {
 
   @Transactional
   public void loanBook(BookLoanRequest request) {
-    // 1. 책 정보를 가져온다.
-    Book book = bookRepository.findByName(request.getBookName())
-        .orElseThrow(IllegalArgumentException::new);
+    String bookName = request.getBookName();
+    String userName = request.getUserName();
+    log.info("대출 요청 시작: 사용자={}, 책={}", userName, bookName);
 
-    // 2. 대출기록 정보를 확인해서 대출중인지 확인합니다.
-    // 3. 만약에 확인했는데 대출 중이라면 예외를 발생시킵니다.
+    // 1. 책 정보를 가져온다.
+    Book book = bookRepository.findByName(bookName)
+            .orElseThrow(() -> {
+              log.error("책을 찾을 수 없습니다: {}", bookName);
+              return new IllegalArgumentException("책을 찾을 수 없습니다");
+            });
+    log.debug("책 정보 조회 완료: {}", book.getName());
+
+    // 2&3. 대출기록 정보를 확인해서 대출중인지 확인합니다.
     if (userLoanHistoryRepository.existsByBookNameAndIsReturn(book.getName(), false)) {
-      throw new IllegalArgumentException("진작 대출되어 있는 책입니다");
+      log.warn("이미 대출된 책입니다: {}", bookName);
+      throw new IllegalArgumentException("이미 대출되어 있는 책입니다");
     }
 
     // 4. 유저 정보를 가져온다.
-    User user = userRepository.findByName(request.getUserName())
-        .orElseThrow(IllegalArgumentException::new);
-    user.loanBook(book.getName());
+    User user = userRepository.findByName(userName)
+            .orElseThrow(() -> {
+              log.error("사용자를 찾을 수 없습니다: {}", userName);
+              return new IllegalArgumentException("사용자를 찾을 수 없습니다");
+            });
+
+//    user.loanBook(book.getName());
+    UserLoanHistory loanHistory = new UserLoanHistory(user, book.getName());
+    userLoanHistoryRepository.save(loanHistory);
+
+    log.info("User의 대출 기록 크기: {}", user.getLoanHistorySize());
+    log.info("대출 완료: 사용자={}, 책={}", userName, bookName);
   }
 
   @Transactional
