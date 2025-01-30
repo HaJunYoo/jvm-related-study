@@ -69,16 +69,32 @@ public class BookService {
     UserLoanHistory loanHistory = new UserLoanHistory(user, book.getName());
     userLoanHistoryRepository.save(loanHistory);
 
-    log.info("User의 대출 기록 크기: {}", user.getLoanHistorySize());
+//    log.info("User의 대출 기록 크기: {}", user.getLoanHistorySize());
     log.info("대출 완료: 사용자={}, 책={}", userName, bookName);
   }
 
   @Transactional
   public void returnBook(BookReturnRequest request) {
-    User user = userRepository.findByName(request.getUserName())
-        .orElseThrow(IllegalArgumentException::new);
-    System.out.println("Hello");
-    user.returnBook(request.getBookName());
+    String userName = request.getUserName();
+    String bookName = request.getBookName();
+    log.info("반납 요청 시작: 사용자={}, 책={}", userName, bookName);
+
+    User user = userRepository.findByName(userName)
+            .orElseThrow(() -> {
+              log.error("사용자를 찾을 수 없습니다: {}", userName);
+              return new IllegalArgumentException("사용자를 찾을 수 없습니다");
+            });
+
+    UserLoanHistory history = userLoanHistoryRepository
+            .findByUserIdAndBookName(user.getId(), bookName)
+            .orElseThrow(() -> {
+              log.error("대출 기록을 찾을 수 없습니다: 사용자={}, 책={}", userName, bookName);
+              return new IllegalArgumentException("대출 기록을 찾을 수 없습니다");
+            });
+
+    history.doReturn();
+    userLoanHistoryRepository.save(history);
+    log.info("반납 완료: 사용자={}, 책={}", userName, bookName);
   }
 
 }
